@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { fetchPost } from "../store/postPage/actions";
 import { selectPostAndComments } from "../store/postPage/selectors";
 import ReactMarkdown from "react-markdown";
+import moment from "moment";
 
 export default function PostPage() {
   const postWithComments = useSelector(selectPostAndComments);
@@ -27,7 +28,9 @@ export default function PostPage() {
             <p>Searching Done!</p>
             <h1>{postWithComments.post.title}</h1>
             <p className="meta">
-              Date Written: {postWithComments.post.createdAt} Author:
+              Date Written:{" "}
+              {moment(postWithComments.post.createdAt).format("DD-MM-YYYY")}{" "}
+              Author:
               {postWithComments.post.developer.name} Tags:
               {postWithComments.post.tags.map((tag) => {
                 return <div key={tag.id}>{tag.tag}</div>;
@@ -35,7 +38,16 @@ export default function PostPage() {
             </p>
             <ReactMarkdown source={postWithComments.post.content} />
             <h2>Comments</h2>
-            <p>TODO</p>
+            <p>
+              {postWithComments.comments.rows.map((comment) => {
+                return (
+                  <div key={comment.id}>
+                    "{comment.text}" by {comment.developer.name} "created:
+                    {moment(comment.createdAt).format("DD-MM-YYYY")}""
+                  </div>
+                );
+              })}
+            </p>
           </>
         )}
       </div>
